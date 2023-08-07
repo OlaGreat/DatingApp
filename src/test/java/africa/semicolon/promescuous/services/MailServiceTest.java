@@ -27,7 +27,6 @@ public class MailServiceTest {
         String subject ="test email";
 
 
-
         EmailNotificationRequest request = new EmailNotificationRequest();
         request.setMailContent(message);
         Recipient recipient = new Recipient();
