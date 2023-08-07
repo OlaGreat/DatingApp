@@ -23,5 +23,4 @@ public class Media {
     @ManyToOne
     private User user;
 
-    private Integer reactionCount = BigInteger.ZERO.intValue();
 }
