@@ -2,7 +2,6 @@ package africa.semicolon.promescuous.services;
 
 import africa.semicolon.promescuous.dto.request.EmailNotificationRequest;
 import africa.semicolon.promescuous.dto.request.Recipient;
-import africa.semicolon.promescuous.dto.request.Sender;
 import africa.semicolon.promescuous.dto.response.EmailNotificationResponse;
 import africa.semicolon.promescuous.service.MailServices;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,7 @@ public class MailServiceTest {
 
     @Test
     public void testThatEmailServiceWorks(){
-        String recipientEmail = "oladipupoolamilekan2@gmail.com";
+        String recipientEmail = "rixode7827@v1zw.com";
         String message = "<p>testing Mail Service</p>";
         String mailSender = "noreply@promiscuous.com";
         String subject ="test email";
@@ -29,16 +28,12 @@ public class MailServiceTest {
 
         EmailNotificationRequest request = new EmailNotificationRequest();
         request.setMailContent(message);
-        Recipient recipient = new Recipient();
-        recipient.setEmail(recipientEmail);
-        request.setRecipients(List.of(recipient));
-        Sender sender = new Sender();
-        sender.setEmail(mailSender);
-        request.setSender(sender);
+        request.setRecipients(List.of(new Recipient(recipientEmail)));
         request.setSubject(subject);
 
         EmailNotificationResponse emailNotificationResponse =mailServices.send(request);
-        assertNotNull(emailNotificationResponse);
+        assertNotNull(emailNotificationResponse.toString());
+        System.out.println("--->{}  " + emailNotificationResponse);
 
 
     }

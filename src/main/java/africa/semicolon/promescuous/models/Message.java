@@ -4,22 +4,24 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 @Setter
 @Getter
-public class Notification {
-
+public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @Column(nullable = false, columnDefinition = "MEDIUMTEXT", length = 1000)
-    private String content;
-
     private Long senderId;
-
     @ManyToOne
     private User user;
+
+    @Column(nullable = false, columnDefinition = "MEDIUMTEXT", length = 1000)
+    private String messageBody;
+
+    private LocalDateTime time ;
 
 
 }

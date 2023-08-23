@@ -15,6 +15,7 @@ import java.net.URI;
 
 public class BrevoMailService implements MailServices{
 
+    //Todo: Remove hardCoded value
     private AppConfig appConfig;
     @Override
     public EmailNotificationResponse send(EmailNotificationRequest emailNotificationRequest) {
@@ -22,6 +23,7 @@ public class BrevoMailService implements MailServices{
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("api-key", appConfig.getMailConfig());
+        headers.set("Content-Type", "application/json");
         HttpEntity<EmailNotificationRequest> request = new HttpEntity<>(emailNotificationRequest,headers);
 
 
