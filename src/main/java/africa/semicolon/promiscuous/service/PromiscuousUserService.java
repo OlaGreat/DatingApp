@@ -8,6 +8,7 @@ import africa.semicolon.promiscuous.execptions.PromiscuousBaseException;
 import africa.semicolon.promiscuous.execptions.UserNotFoundException;
 import africa.semicolon.promiscuous.models.Address;
 import africa.semicolon.promiscuous.models.Interest;
+import africa.semicolon.promiscuous.models.Media;
 import africa.semicolon.promiscuous.models.User;
 import africa.semicolon.promiscuous.repository.UserRepository;
 import africa.semicolon.promiscuous.service.cloud.CloudService;
@@ -51,6 +52,8 @@ public class PromiscuousUserService implements UserServices{
 
     private final CloudService cloudService;
 
+    private final MediaService mediaService;
+
     private final PasswordEncoder passwordEncoder;
 
 
@@ -89,7 +92,12 @@ public class PromiscuousUserService implements UserServices{
     public GetUserResponse getUserById(long id) throws UserNotFoundException {
         Optional<User> foundUser = userRepository.findById(id);
         User user = foundUser.orElseThrow(()-> new UserNotFoundException(USER_NOT_FOUND_EXCEPTION.getMessage()));
+
+        Media media = new Media();
+
         GetUserResponse getUserResponse = buildGetUserResponse(user);
+        getUserResponse.setProfileImage(media.getUrl());
+
         return getUserResponse;
     }
 
@@ -123,11 +131,9 @@ public class PromiscuousUserService implements UserServices{
     public UpdateRequestResponse UpdateUser(UpdateRequest updateRequest, Long id) throws JsonPatchException {
         ModelMapper modelMapper = new ModelMapper();
 
-//      String url =  uploadImage(updateRequest.getProfileImage());
-
-
         User user = findUserById(id);
 
+        mediaService.uploadMedia(updateRequest.getProfileImage(), user);
 
 
         Set<String> userInterest = updateRequest.getInterests();
@@ -148,6 +154,18 @@ public class PromiscuousUserService implements UserServices{
         if (isFormWithProfileImage) return cloudService.upload(profileImage);
         throw new RuntimeException("profile image  upload failed");
     }
+
+    @Override
+    public UploadMediaResponse uploadProfilePicture(MultipartFile mediaToUpload) {
+        return mediaService.uploadProfilePicture(mediaToUpload);
+    }
+
+    @Override
+    public ApiResponse<?> reactToMedia(MediaReactionRequest mediaReactionRequest) {
+        String response = mediaService.reactToMedia(mediaReactionRequest);
+        return ApiResponse.builder().data(response).build();
+    }
+
 
     private static Set<Interest> parseInterestForm(Set<String> interests){
         return interests.stream()
